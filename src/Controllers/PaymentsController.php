@@ -55,8 +55,11 @@ class PaymentsController
 
     public static function paymentsSummary(Request $request, Response $response, array $query): void
     {
-        $startDt = DateTime::createFromFormat('Y-m-d\TH:i:s.v\Z', $query['from'] ?? 'now') ?? new DateTime('now');
-        $endDt = DateTime::createFromFormat('Y-m-d\TH:i:s.v\Z', $query['to'] ?? 'now') ?? new DateTime('now');
+        $from = isset($query['from']) ? $query['from'] : (new DateTime('now'))->format('Y-m-d\TH:i:s.v\Z');
+        $to = isset($query['to']) ? $query['to'] : (new DateTime('now'))->format('Y-m-d\TH:i:s.v\Z');
+
+        $startDt = DateTime::createFromFormat('Y-m-d\TH:i:s.v\Z', $from, new \DateTimeZone('UTC'));
+        $endDt = DateTime::createFromFormat('Y-m-d\TH:i:s.v\Z', $to, new \DateTimeZone('UTC'));
 
         $timestampsStart = $startDt->getTimestamp();
         $timestampsEnd = $endDt->getTimestamp();
